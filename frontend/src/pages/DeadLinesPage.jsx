@@ -42,10 +42,9 @@ export default function DeadlinesPage() {
         setMateria('');
         setDescripcion('');
         setFecha('');
-        showToast("Fecha clave registrada 📌");
+        showToast("Fecha clave registrada");
     };
 
-    // 🌟 LOGICA MEJORADA: Blindada contra errores de parseo de fechas nativas
     const obtenerDiasRestantes = (fechaEntrega) => {
         if (!fechaEntrega) return 0;
         try {
@@ -53,7 +52,7 @@ export default function DeadlinesPage() {
             hoy.setHours(0, 0, 0, 0);
             
             const entrega = new Date(fechaEntrega);
-            if (isNaN(entrega.getTime())) return 0; // Si la fecha es inválida, frena el crash
+            if (isNaN(entrega.getTime())) return 0; 
             entrega.setHours(0, 0, 0, 0);
             
             const diferenciaTiempo = entrega.getTime() - hoy.getTime();
@@ -73,7 +72,7 @@ export default function DeadlinesPage() {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start relative">
-            {/* Formulario */}
+
             <div className="md:col-span-1 bg-white dark:bg-dark-card p-6 rounded-3xl border border-sage-200/60 dark:border-dark-border shadow-xs space-y-4 transition-all">
                 <h3 className="font-serif font-bold text-base text-sage-900 dark:text-dark-text-base flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-sage-600" /> Agendar Entrega
@@ -115,7 +114,6 @@ export default function DeadlinesPage() {
                 </form>
             </div>
 
-            {/* Listado */}
             <div className="md:col-span-2 space-y-3 max-h-[calc(100vh-220px)] overflow-y-auto pr-1">
                 {deadlines.length === 0 ? (
                     <div className="p-8 text-center bg-white dark:bg-dark-card rounded-2xl border border-slate-100 dark:border-dark-border text-slate-400 italic text-xs">
@@ -134,8 +132,8 @@ export default function DeadlinesPage() {
                                         <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1 ${obtenerEstiloBadge(diasRestantes)}`}>
                                             <Clock className="h-3 w-3" />
                                             {diasRestantes < 0 && "Entregado"}
-                                            {diasRestantes === 0 && "¡Es Hoy! 🔥"}
-                                            {diasRestantes === 1 && "Falta 1 día ⚠️"}
+                                            {diasRestantes === 0 && "¡Es Hoy! "}
+                                            {diasRestantes === 1 && "Falta 1 día "}
                                             {diasRestantes > 1 && `Faltan ${diasRestantes} días`}
                                         </span>
                                     </div>
@@ -156,7 +154,6 @@ export default function DeadlinesPage() {
                 )}
             </div>
 
-            {/* TOAST */}
             {toast && (
                 <div className="fixed bottom-6 right-6 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 transition-all z-50 border border-slate-800">
                     <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" />

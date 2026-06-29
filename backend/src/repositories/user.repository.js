@@ -1,5 +1,4 @@
-// src/repositories/user.repository.js
-const User = require('../models/User'); // Tu modelo de Mongoose
+const User = require('../models/User'); 
 
 class UserRepository {
     async create(userData) {
@@ -10,9 +9,7 @@ class UserRepository {
         return await User.findOne({ email });
     }
 
-    // 🌟 AGREGÁ ESTA FUNCIÓN ACÁ ADENTRO:
     async findByVerificationToken(token) {
-        // Mongoose busca en la base de datos el usuario que coincida con el token
         return await User.findOne({ verificationToken: token });
     }
 }

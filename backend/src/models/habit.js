@@ -8,7 +8,7 @@ const HabitSchema = new mongoose.Schema({
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category', // 👈 ESTA ES LA RELACIÓN QUE PIDE LA UTN
+        ref: 'Category', 
         required: [true, 'La categoría es obligatoria']
     },
     name: {
@@ -19,16 +19,16 @@ const HabitSchema = new mongoose.Schema({
     description: { type: String, trim: true },
     frequency: {
         type: String,
-        enum: ['diario', 'semanal'], // Ahora definimos si es diario o días específicos
+        enum: ['diario', 'semanal'], 
         default: 'diario'
     },
     days: {
-        type: [String], // Ej: ['LU', 'MI', 'VI']
+        type: [String], 
         default: []
     },
     streak: {
         type: Number,
-        default: 0 // Contador de días seguidos cumplidos
+        default: 0 
     },
     isCompletedToday: {
         type: Boolean,

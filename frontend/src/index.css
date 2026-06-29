@@ -11,7 +11,7 @@
   --font-serif: 'Playfair Display', serif;
   --font-sans: 'Inter', sans-serif;
 
-  /* 🟢 Paleta Sage Actual (Modo Claro) */
+
   --color-sage-50: #f4f7f4;
   --color-sage-100: #e6ebe6;
   --color-sage-200: #ccd7cc;
@@ -20,23 +20,20 @@
   --color-sage-800: #1b5e20;
   --color-sage-900: #103a14;
 
-  /* 🌲 Paleta Bosque Profundo (NUEVO: Modo Oscuro) */
-  --color-dark-bg: #0a110a;        /* Fondo principal */
-  --color-dark-card: #121e12;      /* Fondo de tarjetas */
-  --color-dark-border: #1f331f;    /* Bordes sutiles */
-  --color-dark-text-base: #e0e6e0; /* Texto principal */
-  --color-dark-text-muted: #a0b0a0; /* Texto secundario */
-  --color-dark-sage-light: #ccd7cc; /* Sage para resaltar en oscuro */
+  --color-dark-bg: #0a110a;        
+  --color-dark-card: #121e12;      
+  --color-dark-border: #1f331f;    
+  --color-dark-text-base: #e0e6e0; 
+  --color-dark-text-muted: #a0b0a0; 
+  --color-dark-sage-light: #ccd7cc; 
 }
 
-/* Configuramos Tailwind para usar la clase 'dark' en el <html> */
 @custom-variant dark (&:where(.dark, .dark *));
 
 body {
   @apply font-sans bg-sage-50 text-slate-700 transition-colors duration-300;
 }
 
-/* Aplicamos los fondos base del Modo Oscuro */
 .dark body {
   @apply bg-dark-bg text-dark-text-base;
 }

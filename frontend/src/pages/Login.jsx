@@ -18,15 +18,12 @@ export default function Login() {
     setLoading(true);
 
     try {
-        // 🌟 1. REVISÁ BIEN ESTA URL: Asegurate de que no falte ninguna letra (ej: /api/auth/login)
         const response = await fetch('http://localhost:8080/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         });
 
-        // Si el servidor devuelve un HTML (error 404 o 500 de Express sin manejar),
-        // la respuesta NO va a ser un JSON válido. Lo atajamos antes de que rompa el .json():
         const contentType = response.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
             throw new Error("El servidor devolvió una respuesta inesperada (HTML). Revisá la consola del backend.");
@@ -38,10 +35,8 @@ export default function Login() {
             throw new Error(data.error || data.message || 'Error al iniciar sesión');
         }
 
-        // 🌟 2. LOGIN EXITOSO: Guardamos el token JWT que te pide la UTN
         localStorage.setItem('token', data.token);
         
-        // Acá lo mandás a tu Dashboard / Panel Principal
         window.location.href = '/dashboard'; 
 
     } catch (err) {
@@ -60,7 +55,6 @@ export default function Login() {
                     <p className="text-sm text-sage-700 dark:text-dark-text-muted mt-2 font-medium">Tu santuario diario de hábitos y estudio</p>
                 </div>
 
-                {/* 🌟 ACÁ SE RENDERIZAN LOS MENSAJES DE ERROR DEL BACKEND */}
                 {error && (
                     <div className="mb-4 rounded-xl bg-rose-50 p-3 text-sm font-medium text-rose-600 border border-rose-200 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/40">
                         ⚠️ {error}

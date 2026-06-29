@@ -21,7 +21,7 @@ const NoteSchema = new mongoose.Schema({
         required: [true, 'El contenido de la nota no puede estar vacío']
     },
     imageUrl: {
-        type: String, // Para tus portadas estéticas de Pinterest/Unsplash
+        type: String, 
         default: ''
     },
     mood: {

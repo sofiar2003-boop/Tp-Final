@@ -2,7 +2,6 @@
 const validateRegister = (req, res, next) => {
     const { name, email, password } = req.body;
 
-    // 🌟 Validamos que el nombre no venga vacío ni con espacios locos
     if (!name || !name.trim()) {
         return res.status(400).json({ success: false, error: "El campo nombre es obligatorio." });
     }

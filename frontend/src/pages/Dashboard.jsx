@@ -12,7 +12,6 @@ export default function Dashboard() {
     const [seccionActiva, setSeccionActiva] = useState('habitos');
     const [pendientesHoyCount, setPendientesHoyCount] = useState(0);
 
-    // 💾 Estado de Deadlines directo
     const [deadlines, setDeadlines] = useState(() => {
         const saved = localStorage.getItem('panel_deadlines_direct_v1');
         return saved ? JSON.parse(saved) : [
@@ -71,15 +70,15 @@ export default function Dashboard() {
 
     return (
         <div className="flex flex-col md:flex-row min-h-screen bg-sage-50 dark:bg-dark-bg text-slate-700 dark:text-dark-text-base transition-colors duration-300">
-            {/* Sidebar Lateral */}
+
             <aside className="w-full md:w-64 bg-white dark:bg-dark-card border-b md:border-b-0 md:border-r border-sage-200 dark:border-dark-border p-6 flex flex-col gap-4 md:gap-6 shrink-0 md:h-screen md:sticky md:top-0">
                 <div className="flex md:block items-center justify-between">
                     <div>
-                        {/* 🌟 CAMBIO: Título 100% impersonal para distribución general */}
+
                         <h2 className="text-xl md:text-2xl font-serif font-bold text-sage-800 dark:text-dark-sage-light tracking-tight">Panel de Control</h2>
                         <p className="text-[10px] md:text-[11px] text-sage-600 dark:text-dark-text-muted font-medium uppercase tracking-wider mt-0.5">Gestión Universitaria</p>
                     </div>
-                    {/* Botón salir compacto para versión móvil */}
+
                     <button onClick={logout} className="md:hidden p-2 text-rose-600 bg-rose-50 dark:bg-rose-950/30 rounded-xl">
                         <LogOut className="h-4 w-4" />
                     </button>
@@ -124,10 +123,10 @@ export default function Dashboard() {
                 <div className="text-[10px] text-slate-400 dark:text-dark-text-muted font-medium text-center pt-4 border-t border-slate-100 dark:border-dark-border">v1.7.0 • UTN FRBA</div>
             </aside>
 
-            {/* Panel Principal */}
+
             <main className="flex-1 p-4 sm:p-6 md:p-10 overflow-y-auto h-auto md:h-screen">
                 <header className="mb-8 border-b border-sage-100 dark:border-dark-border pb-6">
-                    {/* 🌟 CAMBIO: Saludo dinámico basado en la sesión del usuario logueado */}
+
                     <h1 className="text-3xl font-serif font-bold text-sage-800 dark:text-dark-text-base">¡Hola, {user?.name || 'Usuario'}! 🌿</h1>
                     <p className="text-slate-500 dark:text-dark-text-muted mt-1">Ecosistema de organización personal y académico.</p>
                 </header>
@@ -136,8 +135,7 @@ export default function Dashboard() {
                 {seccionActiva === 'diario' && <Journal />}
                 {seccionActiva === 'documentos' && <DocumentWriter />}
                 {seccionActiva === 'pomodoro' && <PomodoroPage />}
-                
-                {/* Vista interna de Deadlines */}
+
                 {seccionActiva === 'deadlines' && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
                         <div className="bg-white dark:bg-dark-card p-6 rounded-3xl border border-sage-200/60 dark:border-dark-border shadow-xs space-y-4">

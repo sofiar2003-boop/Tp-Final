@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Dashboard from './pages/Dashboard'; // 👈 Importamos el Dashboard real
+import Dashboard from './pages/Dashboard'; 
 import DocumentWriter from './pages/DocumentWriter';
 import Journal from './pages/Journal';
 
@@ -18,16 +18,14 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Rutas Públicas */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           
-          {/* Ruta Privada Protegida */}
           <Route 
             path="/dashboard" 
             element={
               <ProtectedRoute>
-                <Dashboard /> {/* 👈 Usamos el componente nuevo */}
+                <Dashboard /> 
               </ProtectedRoute>
             } 
           />

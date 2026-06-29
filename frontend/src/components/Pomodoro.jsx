@@ -13,7 +13,6 @@ export default function Pomodoro() {
         let intervalo = null;
         if (estaCorriendo && segundos > 0) {
             intervalo = setInterval(() => {
-                // 🌟 CORREGIDO: Usamos 'prev' para evitar el choque de nombres con el estado
                 setSegundos(prev => prev - 1);
             }, 1000);
         } else if (segundos === 0) {

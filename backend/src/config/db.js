@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const Category = require('../models/Category'); // Importamos el modelo de categoría
+const Category = require('../models/Category');
 
 const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGO_URI);
         console.log(`MongoDB Conectado: ${conn.connection.host} 🍃`);
 
-        // 🌱 SEED AUTOMÁTICO DE CATEGORÍAS
+        
         const count = await Category.countDocuments();
         if (count === 0) {
             await Category.create([

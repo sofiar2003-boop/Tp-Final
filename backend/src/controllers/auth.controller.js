@@ -1,4 +1,3 @@
-// src/controllers/auth.controller.js
 const authService = require('../services/auth.service');
 
 const register = async (req, res, next) => {
@@ -8,13 +7,12 @@ const register = async (req, res, next) => {
         // Ejecutamos el servicio
         const result = await authService.register(name, email, password);
         
-        // 🌟 CLAVE: Si llegó acá, respondemos inmediatamente con un 201
         return res.status(201).json({ 
             success: true, 
             message: result.message 
         });
     } catch (error) {
-        // Si el servicio tiró un error (ej: email repetido), pasa al errorHandler
+        // Si el servicio tiro un error, pasa al errorHandler
         next(error);
     }
 };

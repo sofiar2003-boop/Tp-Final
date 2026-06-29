@@ -3,7 +3,6 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    // 🌟 Intentamos levantar el usuario guardado previamente para mantener la sesión real
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem('user_session');
         return savedUser ? JSON.parse(savedUser) : null;
@@ -15,7 +14,6 @@ export const AuthProvider = ({ children }) => {
         if (token) {
             localStorage.setItem('token', token);
             
-            // 🌟 CORREGIDO: Si no hay un usuario en el estado, buscamos en el storage o creamos uno genérico
             if (!user) {
                 const savedUser = localStorage.getItem('user_session');
                 if (savedUser) {
@@ -36,7 +34,6 @@ export const AuthProvider = ({ children }) => {
         setToken(jwtToken);
         setUser(userData);
         localStorage.setItem('token', jwtToken);
-        // 🌟 Guardamos el objeto usuario real en el storage para que persista al refrescar
         localStorage.setItem('user_session', JSON.stringify(userData));
     };
 

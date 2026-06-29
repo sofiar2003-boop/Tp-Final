@@ -15,7 +15,6 @@ export default function DocumentWriter() {
         return savedActive ? Number(savedActive) : (documents[0]?.id || null);
     });
 
-    // 🌟 NUEVOS ESTADOS: Búsqueda y Notificaciones
     const [searchQuery, setSearchQuery] = useState('');
     const [toast, setToast] = useState('');
 
@@ -24,12 +23,11 @@ export default function DocumentWriter() {
 
     const showToast = (msg) => {
         setToast(msg);
-        setTimeout(() => setToast(''), 2500); // Desaparece a los 2.5 segundos
+        setTimeout(() => setToast(''), 2500); 
     };
 
     const activeDoc = documents.find(d => d.id === activeDocId);
 
-    // 🔍 LÓGICA DEL FILTRO EN CALIENTE
     const documentosFiltrados = documents.filter(doc => 
         doc.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -69,13 +67,12 @@ export default function DocumentWriter() {
     return (
         <div className="bg-white rounded-3xl border border-sage-200/60 shadow-xs overflow-hidden h-[calc(100vh-180px)] flex flex-col md:flex-row bg-white relative">
             
-            {/* BARRA LATERAL INTERNA CON BUSCADOR */}
             <div className="w-full md:w-64 border-b md:border-b-0 md:border-r border-sage-100 bg-sage-50/20 p-4 flex flex-col gap-3 shrink-0">
                 <button onClick={crearNuevoDocumento} className="w-full flex items-center justify-center gap-2 py-2.5 bg-sage-800 hover:bg-sage-700 text-white font-medium text-xs rounded-xl shadow-xs transition-all cursor-pointer">
                     <Plus className="h-4 w-4" /> Crear Nuevo Resumen
                 </button>
 
-                {/* 🔍 Input de Búsqueda Minimalista */}
+
                 <div className="relative">
                     <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
                     <input 
@@ -105,7 +102,6 @@ export default function DocumentWriter() {
                 </div>
             </div>
 
-            {/* ENTORNO EDITORIAL */}
             <div className="flex-1 p-6 md:p-8 flex flex-col justify-between bg-white">
                 {activeDoc ? (
                     <div className="flex-1 flex flex-col gap-4">
@@ -137,7 +133,6 @@ export default function DocumentWriter() {
                 )}
             </div>
 
-            {/* 🌟 NOTIFICACIÓN FLOTANTE (TOAST) */}
             {toast && (
                 <div className="absolute bottom-6 right-6 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-bounce transition-all border border-slate-800 z-50">
                     <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" />

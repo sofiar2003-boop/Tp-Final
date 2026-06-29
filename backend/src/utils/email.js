@@ -2,20 +2,17 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 
 const sendVerificationEmail = async (email, token) => {
-    // 1. Configuramos el transportador con 'user' y 'pass'
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: process.env.SMTP_PORT,
         auth: {
             user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS // 👈 CORREGIDO ACÁ (de 'password' a 'pass')
+            pass: process.env.SMTP_PASS 
         },
     });
 
-    // 2. Definimos el link que va a clickear el usuario
     const verificationUrl = `http://localhost:8080/api/auth/verify/${token}`;
 
-    // 3. Estructuramos el contenido del correo
     const mailOptions = {
         from: '"Tracker de Hábitos 🚀" <no-reply@trackerhabitos.com>',
         to: email,
@@ -30,7 +27,6 @@ const sendVerificationEmail = async (email, token) => {
         `,
     };
 
-    // 4. Enviamos el mail real
     await transporter.sendMail(mailOptions);
 };
 

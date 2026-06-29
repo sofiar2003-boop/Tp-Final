@@ -1,13 +1,9 @@
-// src/services/habit.service.js
-// Reemplazá o creá con este código limpio:
-
-// Nota: Cuando tengas tu habit.repository, lo vas a importar acá.
-// Por ahora, para probar rápido si impacta en la base de datos, podemos usar el Modelo directo.
 const Habit = require('../models/Habit'); 
+const mongoose = require('mongoose');
 
 class HabitService {
     async createHabit(habitData) {
-        const { name, frequency, category, user } = habitData;
+        const { name, frequency, category, user, diasSemana } = habitData;
 
         if (!name) {
             const error = new Error("El nombre del hábito es obligatorio");
@@ -15,21 +11,29 @@ class HabitService {
             throw error;
         }
 
-        // Creamos el hábito en MongoDB vinculándolo al ID del usuario
-        const newHabit = await Habit.create({
-            name,
-            frequency: frequency || 'diaria',
-            category, // ID de la categoría relacionada
-            user      // ID del usuario dueño (vía JWT)
-        });
+        const categoriaFinal = category || new mongoose.Types.ObjectId();
 
-        return newHabit;
+        return await Habit.create({
+            name,
+            frequency: frequency || 'semanal',
+            diasSemana: diasSemana || [1, 2, 3, 4, 5],
+            category: categoriaFinal,
+            user
+        });
     }
+
     async getHabitsByUser(userId) {
-    // 🌟 Filtramos en MongoDB para traer SOLO los hábitos que le pertenecen a este usuario
-    // Además, usamos populate por si querés traer los datos de la categoría relacionados
-    return await Habit.find({ user: userId }).populate('category', 'name');
-}
+        return await Habit.find({ user: userId });
+    }
+
+    async deleteHabit(habitId) {
+    return await Habit.findByIdAndDelete(habitId);
+    }
+
+    async updateHabit(habitId, updateData) {
+    return await Habit.findByIdAndUpdate(habitId, updateData, { new: true });
+    }
+    
 }
 
 module.exports = new HabitService();

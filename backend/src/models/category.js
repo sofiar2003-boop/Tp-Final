@@ -7,7 +7,7 @@ const CategorySchema = new mongoose.Schema({
         trim: true
     },
     color: {
-        type: String, // Para usar en el frontend (ej: "#4CAF50")
+        type: String, 
         default: '#3b82f6'
     }
 }, { timestamps: true });

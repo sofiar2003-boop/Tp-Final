@@ -12,3 +12,6 @@ Aplicación backend construida con Node.js, Express y MongoDB que implementa una
    BACKEND_URL=http://localhost:8080
 
 ### Usuario de prueba 
+Este es un usuario con el correo ya validado y lista para su funcion.
+Usuario: usuario-prueba@gmail.com
+contrasenia: prueba123

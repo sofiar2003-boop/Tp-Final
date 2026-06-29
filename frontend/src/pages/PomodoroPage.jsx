@@ -10,7 +10,7 @@ export default function PomodoroPage() {
     const [esCicloEstudio, setEsCicloEstudio] = useState(true);
 
     useEffect(() => {
-        let intervalo = null;
+        let  intervalo = null;
         if (estaCorriendo && segundos > 0) {
             intervalo = setInterval(() => {
                 setSegundos(prev => prev - 1);
@@ -51,7 +51,6 @@ export default function PomodoroPage() {
     return (
         <div className="max-w-2xl mx-auto bg-white dark:bg-dark-card rounded-3xl p-8 md:p-12 border border-sage-200/60 dark:border-dark-border shadow-xs text-center space-y-8 transition-all">
             
-            {/* Cabecera del modo Foco */}
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-dark-border pb-6">
                 <div className="flex items-center gap-2">
                     {esCicloEstudio ? (
@@ -68,7 +67,6 @@ export default function PomodoroPage() {
                 </span>
             </div>
 
-            {/* Gran Reloj Central */}
             <div className="py-6 flex flex-col items-center justify-center relative">
                 <h1 className="text-7xl md:text-8xl font-black text-sage-900 dark:text-dark-text-base tracking-tight tabular-nums select-none">
                     {formatearTiempo(segundos)}
@@ -77,7 +75,7 @@ export default function PomodoroPage() {
                     {esCicloEstudio ? '📚 Concentración Absoluta' : '☕️ Descanso Corto'}
                 </p>
 
-                {/* Barra de progreso de la sesión abajo del reloj */}
+           
                 <div className="w-64 bg-slate-100 dark:bg-dark-bg h-1.5 rounded-full mt-6 overflow-hidden">
                     <div 
                         className="bg-sage-600 h-full rounded-full transition-all duration-300"
@@ -86,7 +84,6 @@ export default function PomodoroPage() {
                 </div>
             </div>
 
-            {/* Controles Gigantes Premium */}
             <div className="flex items-center gap-4 max-w-md mx-auto">
                 <button 
                     onClick={toggleTemporizador}
