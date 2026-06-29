@@ -15,37 +15,35 @@ export default function Register() {
      const { login } = useAuth();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setLoading(true);
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-        try {
-            const response = await fetch('http://localhost:8080/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password })
-            });
+    try {
+        const response = await fetch('http://localhost:8080/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
+        });
 
-            const data = await response.json();
+        const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error(data.message || 'Error al registrar');
-            }
-
-            // 🌟 TRUCO: Si el registro fue exitoso en la Base de Datos,
-            // lo logueamos a la fuerza usando el token que nos devuelva (o uno provisorio)
-            const tokenSimulado = data.token || 'token-directo-registro';
-            login(tokenSimulado, { name, email });
-            
-            // Te mandamos directo al panel estético sin escalas
-            navigate('/dashboard');
-
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
+        if (!response.ok) {
+            // 🌟 CLAVE: Si el backend tiró un error de validación, capturamos su mensaje exacto
+            throw new Error(data.error || data.message || 'Error al procesar el registro');
         }
-    };
+
+        // 📬 REGISTRO EXITOSO: Mostramos un mensaje intermedio avisando lo del correo
+        setSuccess(true); 
+        setError('');
+    } catch (err) {
+        console.error("Error capturado en el registro:", err.message);
+        // 🌟 ACÁ SE SETEA EL ERROR REAL PARA QUE NO APAREZCA VACÍO
+        setError(err.message || 'No se pudo conectar con el servidor.');
+    } finally {
+        setLoading(false);
+    }
+};
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-sage-50 px-4">

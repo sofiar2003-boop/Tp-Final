@@ -1,22 +1,50 @@
+// src/config/nodemailer.js
 const nodemailer = require('nodemailer');
-require('dotenv').config();
 
-const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || "sandbox.smtp.mailtrap.io",
-    port: process.env.EMAIL_PORT || 2525,
-    auth: {
-        user: process.env.EMAIL_USER, // Tu usuario de Mailtrap en el .env
-        pass: process.env.EMAIL_PASS  // Tu contraseña de Mailtrap en el .env
+let transporter;
+
+// Función asíncrona para inicializar el transporte de correos
+const initNodemailer = async () => {
+    try {
+        // Generamos una cuenta de pruebas gratuita en Ethereal automáticamente
+        const testAccount = await nodemailer.createTestAccount();
+
+        transporter = nodemailer.createTransport({
+            host: "smtp.ethereal.email",
+            port: 587,
+            secure: false, // true para puerto 465, false para otros puertos
+            auth: {
+                user: testAccount.user, // Usuario generado automáticamente
+                pass: testAccount.pass, // Contraseña generada automáticamente
+            },
+        });
+
+        console.log("📨 Servidor de correos de prueba (Ethereal) configurado con éxito.");
+        
+        // 🌟 REGLA DE ORO: Esta función nos permite ver dónde caen los correos
+        // Modificamos el sendMail para que nos muestre la URL en la consola
+        const originalSendMail = transporter.sendMail.bind(transporter);
+        transporter.sendMail = async (options) => {
+            const info = await originalSendMail(options);
+            console.log(`\n📬 [CORREO ENVIADO] URL para ver el mail simulado: ${nodemailer.getTestMessageUrl(info)} \n`);
+            return info;
+        };
+
+    } catch (error) {
+        console.error("Error al configurar el servidor de correos:", error);
     }
-});
+};
 
-// Verificar la conexión con el servidor de correos
-transporter.verify((error, success) => {
-    if (error) {
-        console.error("Error en la configuración de Nodemailer:", error);
-    } else {
-        console.log("Servidor de correos listo para enviar mensajes");
+// Ejecutamos la función para crear el transporte apenas arranca el archivo
+initNodemailer();
+
+// Exportamos un objeto que contiene el transporter (se actualizará cuando la promesa termine)
+module.exports = {
+    sendMail: async (options) => {
+        if (!transporter) {
+            // Espera un milisegundo por si la inicialización asíncrona tarda un poquito
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        return transporter.sendMail(options);
     }
-});
-
-module.exports = transporter;
+};

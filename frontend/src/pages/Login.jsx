@@ -12,36 +12,45 @@ export default function Login() {
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setLoading(true);
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-        try {
-            const response = await fetch('http://localhost:8080/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
+    try {
+        // 🌟 1. REVISÁ BIEN ESTA URL: Asegurate de que no falte ninguna letra (ej: /api/auth/login)
+        const response = await fetch('http://localhost:8080/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
 
-            const data = await response.json();
-
-            // 🌟 SI EL BACKEND DEVUELVE UN ERROR (Ej: 403 No verificado), CORTAMOS ACÁ
-            if (!response.ok) {
-                throw new Error(data.error || data.message || 'Error al iniciar sesión');
-            }
-
-            // Si está todo OK, guardamos sesión y vamos al dashboard
-            login(data.token, data.user);
-            navigate('/dashboard'); 
-        } catch (err) {
-            // 🌟 AHORA MUESTRA EL ERROR REAL EN PANTALLA (Ideal para la entrega)
-            console.error("Error en la autenticación:", err.message);
-            setError(err.message || "No se pudo conectar con el servidor.");
-        } finally {
-            setLoading(false);
+        // Si el servidor devuelve un HTML (error 404 o 500 de Express sin manejar),
+        // la respuesta NO va a ser un JSON válido. Lo atajamos antes de que rompa el .json():
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            throw new Error("El servidor devolvió una respuesta inesperada (HTML). Revisá la consola del backend.");
         }
-    };
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'Error al iniciar sesión');
+        }
+
+        // 🌟 2. LOGIN EXITOSO: Guardamos el token JWT que te pide la UTN
+        localStorage.setItem('token', data.token);
+        
+        // Acá lo mandás a tu Dashboard / Panel Principal
+        window.location.href = '/dashboard'; 
+
+    } catch (err) {
+        console.error("Error en el login:", err.message);
+        setError(err.message);
+    } finally {
+        setLoading(false);
+    }
+};
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-sage-50 px-4 dark:bg-dark-bg transition-colors duration-300">

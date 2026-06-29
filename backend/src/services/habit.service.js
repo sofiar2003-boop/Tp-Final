@@ -1,56 +1,35 @@
-const habitRepository = require('../repositories/habit.repository');
+// src/services/habit.service.js
+// Reemplazá o creá con este código limpio:
+
+// Nota: Cuando tengas tu habit.repository, lo vas a importar acá.
+// Por ahora, para probar rápido si impacta en la base de datos, podemos usar el Modelo directo.
+const Habit = require('../models/Habit'); 
 
 class HabitService {
-    async createHabit(userId, habitData) {
-        const { name, description, frequency } = habitData;
+    async createHabit(habitData) {
+        const { name, frequency, category, user } = habitData;
 
-        // Mandamos a guardar al repositorio inyectando el ID del usuario creador
-        const newHabit = await habitRepository.create({
-            user: userId,
-            name,
-            description,
-            frequency
-        });
-
-        return {
-            message: 'Hábito creado con éxito 📅',
-            habit: newHabit
-        };
-    }
-    async getUserHabits(userId) {
-        const habits = await habitRepository.findByUserId(userId);
-        return habits;
-    }
-    
-    async createHabit(userId, habitData) {
-        // Extraemos 'days' del body 👈
-        const { name, description, frequency, category, days } = habitData;
-
-        const newHabit = await habitRepository.create({
-            user: userId,
-            name,
-            description,
-            frequency,
-            category,
-            days: frequency === 'semanal' ? days : [] // Si es diario, el array queda vacío
-        });
-
-        return {
-            message: 'Hábito creado con éxito 📅',
-            habit: newHabit
-        };
-    }
-
-    // 🔍 NUEVO: Lógica para eliminar un hábito
-    async deleteHabit(habitId, userId) {
-        const deletedHabit = await habitRepository.delete(habitId, userId);
-
-        if (!deletedHabit) {
-            throw new Error('Hábito no encontrado o no autorizado para eliminar');
+        if (!name) {
+            const error = new Error("El nombre del hábito es obligatorio");
+            error.statusCode = 400;
+            throw error;
         }
 
-        return { message: 'Hábito eliminado correctamente 🗑️' };
+        // Creamos el hábito en MongoDB vinculándolo al ID del usuario
+        const newHabit = await Habit.create({
+            name,
+            frequency: frequency || 'diaria',
+            category, // ID de la categoría relacionada
+            user      // ID del usuario dueño (vía JWT)
+        });
+
+        return newHabit;
     }
+    async getHabitsByUser(userId) {
+    // 🌟 Filtramos en MongoDB para traer SOLO los hábitos que le pertenecen a este usuario
+    // Además, usamos populate por si querés traer los datos de la categoría relacionados
+    return await Habit.find({ user: userId }).populate('category', 'name');
+}
 }
 
 module.exports = new HabitService();

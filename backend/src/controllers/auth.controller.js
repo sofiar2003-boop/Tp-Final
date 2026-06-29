@@ -1,27 +1,50 @@
-// src/controllers/authController.js
+// src/controllers/auth.controller.js
 const authService = require('../services/auth.service');
 
 const register = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
-        const result = await authService.register(email, password);
-        return res.status(201).json({ success: true, ...result });
+        const { name, email, password } = req.body;
+        
+        // Ejecutamos el servicio
+        const result = await authService.register(name, email, password);
+        
+        // 🌟 CLAVE: Si llegó acá, respondemos inmediatamente con un 201
+        return res.status(201).json({ 
+            success: true, 
+            message: result.message 
+        });
     } catch (error) {
-        next(error); // Pasa el error al middleware centralizado
+        // Si el servicio tiró un error (ej: email repetido), pasa al errorHandler
+        next(error);
     }
 };
 
 const verifyEmail = async (req, res, next) => {
     try {
-        const { token } = req.query; // Toma el ?token=XYZ de la URL
+        const { token } = req.query;
         const result = await authService.verifyEmail(token);
-        
-        // RECOMENDACIÓN TP: Podés responder con un JSON o redirigir directamente al Login del Frontend:
-        // res.redirect('http://localhost:5173/login?verified=true');
-        return res.status(200).json({ success: true, ...result });
+        return res.status(200).json({ 
+            success: true, 
+            message: result.message 
+        });
     } catch (error) {
         next(error);
     }
 };
 
-module.exports = { register, verifyEmail };
+const login = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+        const result = await authService.login(email, password);
+        
+        // Si el login es correcto, devolvemos el token
+        return res.status(200).json({ 
+            success: true, 
+            ...result 
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = { register, verifyEmail, login };

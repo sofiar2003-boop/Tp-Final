@@ -1,63 +1,35 @@
+// src/controllers/habit.controller.js
 const habitService = require('../services/habit.service');
 
-class HabitController {
-    async create(req, res) {
-        try {
-            // req.user viene del middleware auth.middleware.js decodificado
-            const userId = req.user.id; 
-            
-            if (!req.body.name) {
-                return res.status(400).json({ error: 'El nombre del hábito es obligatorio' });
-            }
+const createHabit = async (req, res, next) => {
+    try {
+        const { name, frequency, categoryId } = req.body;
+        const userId = req.user.id; // Viene del token decodificado por el middleware
 
-            // Invocamos al servicio pasándole el usuario y el cuerpo de la petición
-            const result = await habitService.createHabit(userId, req.body);
-            
-            return res.status(201).json(result);
-        } catch (error) {
-            return res.status(400).json({ error: error.message });
-        }
+        const newHabit = await habitService.createHabit({
+            name,
+            frequency,
+            category: categoryId,
+            user: userId
+        });
+
+        return res.status(201).json({ success: true, data: newHabit });
+    } catch (error) {
+        next(error);
     }
-
-    async getAll(req, res) {
-        try {
-            const userId = req.user.id; // Extraído del token JWT por el middleware
-            
-            const habits = await habitService.getUserHabits(userId);
-            
-            return res.status(200).json(habits);
-        } catch (error) {
-            return res.status(500).json({ error: error.message });
-        }
+};
+const getHabits = async (req, res, next) => {
+    try {
+        const userId = req.user.id; // Extraído del token JWT por el middleware protect
+        const habits = await habitService.getHabitsByUser(userId);
+        
+        return res.status(200).json({ success: true, data: habits });
+    } catch (error) {
+        next(error);
     }
+};
 
-    // 🔍 NUEVO: Maneja la petición PUT /api/habits/:id/complete
-    async complete(req, res) {
-        try {
-            const habitId = req.params.id; // Extrae el ID del hábito de la URL
-            const userId = req.user.id;    // Extraído del token por el middleware
-
-            const result = await habitService.completeHabit(habitId, userId);
-            
-            return res.status(200).json(result);
-        } catch (error) {
-            return res.status(400).json({ error: error.message });
-        }
-    }
-
-    // 🔍 NUEVO: Maneja la petición DELETE /api/habits/:id
-    async delete(req, res) {
-        try {
-            const habitId = req.params.id;
-            const userId = req.user.id;
-
-            const result = await habitService.deleteHabit(habitId, userId);
-            
-            return res.status(200).json(result);
-        } catch (error) {
-            return res.status(400).json({ error: error.message });
-        }
-    }
-}
-
-module.exports = new HabitController();
+module.exports = { 
+    createHabit,
+    getHabits 
+};

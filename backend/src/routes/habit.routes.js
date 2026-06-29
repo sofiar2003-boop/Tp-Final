@@ -1,17 +1,18 @@
+// src/routes/habit.routes.js
 const express = require('express');
 const router = express.Router();
 const habitController = require('../controllers/habit.controller');
-const { protect } = require('../middleware/auth.middleware'); // Nuestro guardián
 
-// POST /api/habits (Primero valida el token, si pasa, va al controlador)
-router.post('/', protect, habitController.create);
+// Tu middleware de autenticación que ya funcionaba
+const { protect } = require('../middleware/auth.middleware'); 
 
-router.get('/', protect, habitController.getAll);
+// 🌟 Si habitController.createHabit está bien exportado, esto no va a fallar:
+router.post('/', protect, habitController.createHabit);
 
-// 🔍 NUEVA: PUT /api/habits/:id/complete (Marcar hábito como hecho)
-router.put('/:id/complete', protect, habitController.complete);
-
-// 🔍 NUEVA: DELETE /api/habits/:id (Eliminar un hábito)
-router.delete('/:id', protect, habitController.delete);
+router.get('/', protect, habitController.getHabits);
+// 💡 Si todavía no tenés listos los otros métodos en el controlador, 
+// dejalos comentados con "//" para que no te tire el error de "Undefined":
+// router.get('/', protect, habitController.getHabits);
+// router.delete('/:id', protect, habitController.deleteHabit);
 
 module.exports = router;
