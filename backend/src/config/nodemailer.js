@@ -1,47 +1,36 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-let transporter;
-
-
-const initNodemailer = async () => {
-    try {
-        
-        const testAccount = await nodemailer.createTestAccount();
-
-        transporter = nodemailer.createTransport({
-            host: "smtp.ethereal.email",
-            port: 587,
-            secure: false, 
-            auth: {
-                user: testAccount.user, 
-                pass: testAccount.pass, 
-            },
-        });
-
-        console.log("📨 Servidor de correos de prueba (Ethereal) configurado con éxito.");
-        
-        // Modificamos el sendMail para que nos muestre la URL en la consola
-        const originalSendMail = transporter.sendMail.bind(transporter);
-        transporter.sendMail = async (options) => {
-            const info = await originalSendMail(options);
-            console.log(`\n📬 [CORREO ENVIADO] URL para ver el mail simulado: ${nodemailer.getTestMessageUrl(info)} \n`);
-            return info;
-        };
-
-    } catch (error) {
-        console.error("Error al configurar el servidor de correos:", error);
-    }
-};
-
-
-initNodemailer();
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 module.exports = {
     sendMail: async (options) => {
-        if (!transporter) {
-            // Espera un milisegundo por si tarda un poquito
-            await new Promise(resolve => setTimeout(resolve, 500));
+        try {
+            const verificationLink = `https://tp-final-c7ds.onrender.com/api/auth/verify?token=${options.token || ''}`;
+
+            const response = await resend.emails.send({
+                from: 'onboarding@resend.dev', 
+                to: options.to,              
+                subject: options.subject || 'Valida tu cuenta - Panel Universitario',
+                html: options.html || `
+                    <div style="font-family: sans-serif; padding: 20px; max-width: 600px; border: 1px solid #1e2f26; border-radius: 15px;">
+                        <h2 style="color: #1a2920;">¡Comenzá tu viaje de hábitos!</h2>
+                        <p>Gracias por unirte a nuestro espacio. Para activar tu cuenta de estudio de forma definitiva, hacé clic en el siguiente botón:</p>
+                        <div style="margin: 30px 0; text-align: center;">
+                            <a href="${verificationLink}" style="background-color: #1a2920; color: white; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 10px; display: inline-block;">
+                                Confirmar Cuenta
+                            </a>
+                        </div>
+                        <small style="color: #4f6457;">Si no solicitaste esta cuenta, podés ignorar este correo de forma segura.</small>
+                    </div>
+                `
+            });
+
+            console.log(` Correo real enviado con éxito vía Resend a: ${options.to}`);
+            return response;
+
+        } catch (error) {
+            console.error(" Error de fondo al enviar el mail real con Resend:", error.message);
+            throw new Error("No se pudo procesar el envío del correo de verificación.");
         }
-        return transporter.sendMail(options);
     }
 };
