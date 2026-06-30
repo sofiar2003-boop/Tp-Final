@@ -6,7 +6,6 @@ module.exports = {
     sendMail: async (options) => {
         try {
             const verificationLink = `https://tp-final-c7ds.onrender.com/api/auth/verify?token=${options.token || ''}`;
-
             const response = await resend.emails.send({
                 from: 'onboarding@resend.dev', 
                 to: options.to,              
