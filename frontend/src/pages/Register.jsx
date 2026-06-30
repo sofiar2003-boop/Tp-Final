@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, KeyRound, Loader2, CheckCircle } from 'lucide-react';
 
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8080').replace(/\/$/, '');
+
 export default function Register() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
