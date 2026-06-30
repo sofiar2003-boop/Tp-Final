@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle2, Circle, Calendar, ChevronLeft, ChevronRight, Plus, Trash2, AlertCircle, Loader2, Edit2, Check } from 'lucide-react';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
 export default function HabitManager() {
     const [habits, setHabits] = useState([]);
     const [nuevoHabito, setNuevoHabito] = useState('');
@@ -28,7 +30,7 @@ export default function HabitManager() {
         const fetchHabits = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('http://localhost:8080/api/habits', {
+                const response = await fetch(`${API_URL}/api/habits`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -85,7 +87,7 @@ export default function HabitManager() {
         if (!nuevoHabito.trim() || diasSeleccionados.length === 0) return;
 
         try {
-            const response = await fetch('http://localhost:8080/api/habits', {
+            const response = await fetch(`${API_URL}/api/habits`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,7 +119,7 @@ export default function HabitManager() {
     const guardarEdicionHabito = async (id) => {
         if (!nombreEditando.trim()) return;
         try {
-            const response = await fetch(`http://localhost:8080/api/habits/${id}`, {
+            const response = await fetch(`${API_URL}/api/habits/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -137,7 +139,7 @@ export default function HabitManager() {
 
     const eliminarHabito = async (id) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/habits/${id}`, {
+            const response = await fetch(`${API_URL}/api/habits/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
