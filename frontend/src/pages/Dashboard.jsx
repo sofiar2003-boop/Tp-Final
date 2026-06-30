@@ -5,7 +5,7 @@ import HabitManager from '../components/HabitManager';
 import Journal from './Journal';
 import DocumentWriter from './DocumentWriter';
 import PomodoroPage from './PomodoroPage';
-import DeadlinesPage from './DeadlinesPage';
+import DeadlinesPage from './DeadLinesPage';
 
 export default function Dashboard() {
     const { user, logout } = useAuth();
