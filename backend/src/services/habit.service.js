@@ -1,4 +1,4 @@
-const Habit = require('../models/Habit'); 
+const Habit = require('../models/habit'); 
 const mongoose = require('mongoose');
 
 class HabitService {
@@ -33,7 +33,7 @@ class HabitService {
     async updateHabit(habitId, updateData) {
     return await Habit.findByIdAndUpdate(habitId, updateData, { new: true });
     }
-    
+
 }
 
 module.exports = new HabitService();

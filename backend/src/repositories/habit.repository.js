@@ -1,4 +1,4 @@
-const Habit = require('../models/Habit');
+const Habit = require('../models/habit');
 
 class HabitRepository {
     // Guarda un nuevo hábito asociado a un usuario específico
