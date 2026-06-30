@@ -20,13 +20,13 @@ const register = async (req, res, next) => {
 const verifyEmail = async (req, res, next) => {
     try {
         const { token } = req.query;
-        const result = await authService.verifyEmail(token);
-        return res.status(200).json({ 
-            success: true, 
-            message: result.message 
-        });
+        
+        await authService.verifyEmail(token);
+    
+        return res.redirect('https://tp-final-rose.vercel.app/login?verified=true');
+        
     } catch (error) {
-        next(error);
+        return res.redirect('https://tp-final-rose.vercel.app/login?error=verification_failed');
     }
 };
 
